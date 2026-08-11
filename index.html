@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="学級通信・学年通信。教師が実際に見た子どもの姿を材料に、AIと選ぶ・整理する・意味を考える・短くする・読み直すを経験する30回です。次の一号でひとつだけ試すことを決めます。">
+    <title>生成AI 30のチャレンジⅨ ～学級通信・学年通信～</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/print.css" media="print">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">本文へスキップ</a>
+
+    <nav class="volumes" aria-label="シリーズの他の巻">
+      <span class="volumes__label">シリーズ</span>
+      <ul class="volumes__list">
+        <li><a href="https://kumaken-1.github.io/generative-ai-summer-research-30/" title="生成AI 30のチャレンジⅠ">Ⅰ　はじめて</a></li>
+        <li><a href="https://kumaken-1.github.io/school-office-generative-ai-30/" title="生成AI 30のチャレンジⅡ～校務編～">Ⅱ　校務</a></li>
+        <li><a href="https://kumaken-1.github.io/lesson-improvement-ai-50/" title="生成AI 50のチャレンジⅢ ～授業改善で使える生成AI～">Ⅲ　授業改善</a></li>
+        <li><a href="https://kumaken-1.github.io/lesson-improvement-ai-30/" title="生成AI 30のチャレンジⅣ ～授業改善を生成AIとの対話で進める～">Ⅳ　授業改善を深く</a></li>
+        <li><a href="https://kumaken-1.github.io/inquiry-learning-ai-50/" title="生成AI 50のチャレンジⅤ ～総合・生活科～">Ⅴ　総合・生活科</a></li>
+        <li><a href="https://kumaken-1.github.io/curriculum-management-ai-50/" title="生成AI 50のチャレンジⅥ ～カリキュラム・マネジメント～">Ⅵ　1年を組み替える</a></li>
+        <li><a href="https://kumaken-1.github.io/classroom-community-ai-30/" title="生成AI 30のチャレンジⅦ ～学級経営～">Ⅶ　学級経営</a></li>
+        <li><a href="https://kumaken-1.github.io/school-events-ai-30/" title="生成AI 30のチャレンジⅧ ～特別活動・児童会・学校行事～">Ⅷ　特別活動・行事</a></li>
+        <li><span class="volumes__current" aria-current="page" title="生成AI 30のチャレンジⅨ ～学級通信・学年通信～">Ⅸ　学級通信・学年通信</span></li>
+      </ul>
+      <span class="volumes__note">記録は巻ごとに別々です。</span>
+    </nav>
+
+    <header class="hero">
+      <div class="hero__inner">
+        <h1>生成AI 30のチャレンジⅨ ～学級通信・学年通信～</h1>
+        <p class="hero__lead">書こうとしている通信のことを、次の一号でひとつだけ試すところから。</p>
+        <p class="hero__note">1回だけでも、順番どおりでなくてもかまいません。</p>
+      </div>
+    </header>
+
+    <main id="main" class="site-main" tabindex="-1">
+      <section class="guide" aria-labelledby="guide-title">
+        <h2 id="guide-title">使い方</h2>
+        <p>1回10分です。気になった回をひらくと、<strong>1回目に送る文</strong>、<strong>回答が来たら何を見るか</strong>、<strong>2回目に送る文</strong>が順に並んでいます。文をコピーして、ChatGPTなどの生成AIに貼り付けて送ってください。</p>
+        <p>AIの回答は完成品ではなく、考えるための材料です。採用するか、直すか、使わないかを決めるのは自分です。<strong>使わないという判断も、その回の結論です。</strong></p>
+        <p><strong>この画面は、入力した言葉を一切保存しません。</strong>渡す前に、子どもの名前は「児童A」に置き換え、学校名や同僚の名前は外してください。</p>
+        <p>生成AIを開けないときは、文章を読んで「どんな回答が来そうか」を考えるだけでもかまいません。</p>
+
+        <details class="more">
+          <summary>もう少しくわしく</summary>
+          <p>通信をAIに丸ごと書かせることを目的にした巻ではありません。<strong>教師が実際に見た子どもの姿や出来事を材料に、AIと「選ぶ・整理する・意味を考える・短くする・読み直す」というやり取りを経験する。</strong>ここを見直して、次の一号でひとつだけ試せることを見つけることを、1回の単位にしています。<strong>この講座は通信の代筆ではありません。</strong>「AIに書かせる」のではなく、「AIと一緒に整理する」ための練習です。</p>
+          <p>生成AIは答えを決める役ではありません。見落としている視点、別の言い方、事実と解釈の違いを示し、教師自身が考え直すための相談相手として使います。</p>
+          <p>30回のうち16回は、1回目の文そのものに空欄があります。AIの答えを読む前に、そこへ自分の見立てを書いてから送ります。3回だけ、2回目のあとに任意の3回目があります。</p>
+          <p>送る文には全30回とも<strong>「Web検索をせず、渡した情報だけを使い、各項目は2文以内で」</strong>という制約が付いています。長く整った回答は、教師の判断を弱めるからです。<strong>そして、子どもの内面や性格を推し量らせる回はありません。</strong>AIの回答は、その子や学級の評価ではありません。</p>
+          <p>各回の終わりに、次の一号でひとつだけ試すことを一行だけ書き留めます。<strong>書く場所はこの画面ではなく、手元の手帳です。</strong></p>
+
+          <h3>散りばめてある対話の型</h3>
+          <ul>
+            <li><strong>先に自分の考えを書く</strong> — AIの言葉に引っ張られないためです。</li>
+            <li><strong>「〜しないでください」で縛る</strong> — AIに結論や評価を決めさせないよう、してほしくないことを先に伝えます。</li>
+            <li><strong>事実と解釈を分けさせる</strong> — 「成長した」「優しい」のような言葉でまとめず、実際に起きたことと自分の意味づけを分けて確かめます。</li>
+            <li><strong>読む側の立場から読み直させる</strong> — 書く側の目線に偏らないよう、保護者としてどう読めるかを確かめさせます。</li>
+            <li><strong>決めてから反証を求める</strong> — 自分の判断で失われるものだけを挙げさせます。</li>
+          </ul>
+        </details>
+      </section>
+
+      <details class="guide guide--fold">
+        <summary id="materials-title">練習用の素材（架空の資料5件）</summary>
+        <p>資料を渡す回で、手元に適したものがないときに使ってください。<strong>すべて架空の内容で、実在の学校・自治体・人物とは関係ありません。</strong>この5件には<strong>職員室で失敗しやすい形をわざと入れてあります。</strong></p>
+        <ul>
+          <li><a href="./assets/sample-kodomo-kibou.md">子どもの発言・行動メモ</a>（性格の決めつけが混ざっている形）</li>
+          <li><a href="./assets/sample-gakkyukai-kiroku.md">保護者へのお願い文</a>（命令口調になっている形）</li>
+          <li><a href="./assets/sample-gyoji-junbi.md">学級通信の下書き</a>（連絡事項だけで埋まっている形）</li>
+          <li><a href="./assets/sample-furikaeri-kanso.md">学年通信の下書き</a>（クラスごとに文章の雰囲気が違う形）</li>
+          <li><a href="./assets/sample-hanseikai-iken.md">前年度の通信</a>（日付を変えればそのまま使えそうな形）</li>
+        </ul>
+      </details>
+
+      <section id="summary" class="summary" aria-label="試した数">
+        <p>読み込んでいます。</p>
+      </section>
+
+      <div class="reset-controls" hidden>
+        <button id="reset-tried" type="button" aria-controls="reset-confirmation" aria-expanded="false">記録を消す</button>
+        <div id="reset-confirmation" class="reset-confirmation" hidden>
+          <p>「やってみた」の記録を全部消しますか？</p>
+          <button id="confirm-reset" type="button">消す</button>
+          <button id="cancel-reset" type="button">やめる</button>
+        </div>
+      </div>
+
+      <div id="storage-warning" class="storage-warning" role="status" hidden>
+        この端末では記録を保存できません。<a href="./print.html">印刷用の一覧をご利用ください。</a>
+      </div>
+
+      <nav id="filters" class="filter-bar" aria-label="困りごとの種類でしぼりこむ">
+        <p>読み込んでいます。</p>
+      </nav>
+
+      <section class="list-section" aria-labelledby="list-title">
+        <h2 id="list-title">30回の一覧</h2>
+        <div id="challenge-list" class="card-grid">
+          <p class="loading-note">読み込んでいます。</p>
+          <noscript>
+            <p>表示するにはJavaScriptを有効にしてください。使えない場合は<a href="./print.html">印刷用の一覧</a>をご利用ください。</p>
+          </noscript>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="challenge-dialog" aria-labelledby="dialog-title">
+      <div class="dialog-header">
+        <h2 id="dialog-title">この回</h2>
+        <button id="close-dialog" type="button">閉じる</button>
+      </div>
+      <div id="challenge-detail"></div>
+      <div id="dialog-toast" role="status" aria-live="polite" aria-atomic="true"></div>
+    </dialog>
+
+    <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>

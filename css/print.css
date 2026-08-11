@@ -1,0 +1,134 @@
+@page {
+  size: A4 portrait;
+  margin: 12mm;
+}
+
+html,
+body {
+  color: #000;
+  background: #fff;
+  font-size: 10pt;
+}
+
+body {
+  line-height: 1.45;
+}
+
+.hero {
+  padding: 0 0 5mm;
+  border-block-end: 1pt solid #555;
+  color: #000;
+  background: none;
+}
+
+.hero h1 {
+  margin: 0 0 2mm;
+  font-size: 20pt;
+}
+
+.hero__lead {
+  margin: 0;
+  font-size: 10pt;
+}
+
+.hero__note,
+.skip-link,
+.guide,
+.summary,
+.reset-controls,
+.storage-warning,
+button,
+nav,
+dialog,
+#toast {
+  display: none !important;
+}
+
+.site-main {
+  width: 100%;
+  padding: 5mm 0 0;
+}
+
+/* minmax(0, 1fr) にしないと、折り返せない中身がある回で列が押し広げられ、
+   右の列が紙の右端を越えて切れる。1fr の最小値は auto（min-content）なので、
+   0 まで縮められるようにしておく。 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4mm;
+}
+
+.print-challenge {
+  break-inside: avoid;
+  min-width: 0;
+  padding: 4mm;
+  border: 1pt solid #555;
+  border-radius: 2mm;
+  font-size: 9pt;
+  overflow-wrap: anywhere;
+}
+
+.print-check {
+  margin: 0 0 1mm;
+  font-weight: 700;
+}
+
+.print-category {
+  margin: 0 0 1mm;
+  font-size: 8pt;
+}
+
+.print-title {
+  margin: 0 0 2mm;
+  font-size: 11pt;
+  font-weight: 700;
+}
+
+.print-intro {
+  margin: 0 0 2mm;
+}
+
+.print-label {
+  margin: 2mm 0 1mm;
+  padding-block-start: 1.5mm;
+  border-block-start: 0.5pt solid #aaa;
+  font-weight: 700;
+}
+
+.print-steps {
+  margin: 0 0 2mm;
+  padding-inline-start: 5mm;
+}
+
+.print-help {
+  font-size: 8pt;
+}
+
+.print-prompt {
+  margin: 0 0 2mm;
+  padding: 2mm;
+  border: 0.5pt solid #555;
+  /* 全30回に共通で付く制約を、本文と別の行に出す */
+  white-space: pre-line;
+}
+
+.print-reply {
+  margin: 0 0 2mm;
+  font-style: italic;
+}
+
+.print-hints,
+.print-safety {
+  margin: 0 0 1mm;
+  font-size: 8pt;
+}
+
+/* 最後に手元へ書き留めることを伝える一文。紙にも記入欄は置かない。 */
+.print-closing {
+  margin: 0 0 1mm;
+  font-size: 8pt;
+}
+
+* {
+  print-color-adjust: economy;
+}

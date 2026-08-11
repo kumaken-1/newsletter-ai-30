@@ -1,0 +1,972 @@
+/* hidden 属性を後から display で打ち消してしまう事故を、全体で止める。
+   Ⅰ・Ⅱ・Ⅳ・Ⅴでは .help__panel { display: block } が hidden に勝ち、
+   補足が最初からずっと開いた状態になっていた。Ⅲだけこの一行があって無事だった。 */
+[hidden] {
+  display: none !important;
+}
+
+:root {
+  --ink: #203047;
+  --muted: #5c6878;
+  --paper: #fffdf7;
+  --surface: #fff;
+  --focus: #005fcc;
+  --radius: 14px;
+  --shadow: 0 8px 24px rgb(32 48 71 / 10%);
+  --content-width: 1120px;
+  --label-size: 0.82rem;
+
+  /* 操作の種類ごとの色。ラベルとアイコンが主、色は従。
+     色が見分けられなくても、ラベルだけで何をするか決まるようにしてある。 */
+  --asis-line: #185fa5;
+  --asis-bg: #e6f1fb;
+  --asis-ink: #0c447c;
+
+  --paste-line: #0f6e56;
+  --paste-bg: #e1f5ee;
+  --paste-ink: #085041;
+
+  --attach-line: #534ab7;
+  --attach-bg: #eeedfe;
+  --attach-ink: #3c3489;
+
+  --fill-line: #a3701a;
+  --fill-bg: #faeeda;
+  --fill-ink: #633806;
+
+  /* AIの回答。淡いピンクは、画面の中でここだけに使う。
+     自分が手を動かすところ（白）と、AIが返してくるところ（ピンク）を、
+     読む前に見分けられるようにするための色。 */
+  --reply-line: #c96a8c;
+  --reply-bg: #fdeaf0;
+
+  /* 注意。淡いオレンジ。この色は他の役割で使わない。
+     空欄をうめる琥珀色（--fill-bg）と近くならないよう、桃色寄りに振ってある。 */
+  --warn-line: #c2571a;
+  --warn-bg: #fbdcc4;
+  --warn-ink: #7a3208;
+
+  --done: #1f7a5c;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color: var(--ink);
+  background: var(--paper);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  line-height: 1.7;
+  font-family: "BIZ UDPGothic", "Yu Gothic", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+h1,
+h2,
+h3,
+p,
+ol,
+ul {
+  margin-block-start: 0;
+}
+
+h1,
+h2 {
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+button {
+  min-height: 44px;
+  padding: 0.6rem 1rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+button:hover {
+  background: #f2f6f8;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.icon {
+  flex: none;
+  vertical-align: -0.2em;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  inset-block-start: 0.5rem;
+  inset-inline-start: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  background: var(--focus);
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.hero {
+  padding: clamp(2.5rem, 7vw, 5rem) max(1.5rem, calc((100% - var(--content-width)) / 2));
+  color: #fff;
+  background: #234f58;
+}
+
+.hero__inner {
+  max-width: 780px;
+}
+
+.hero h1 {
+  margin-block-end: 0.75rem;
+  font-size: clamp(1.9rem, 5vw, 3.4rem);
+}
+
+.hero__lead {
+  margin-block-end: 0.4rem;
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-weight: 700;
+}
+
+.hero__note {
+  margin-block-end: 0;
+  color: #ffe9a8;
+  font-weight: 700;
+}
+
+.site-main {
+  width: min(calc(100% - 3rem), var(--content-width));
+  margin-inline: auto;
+  padding-block: clamp(2rem, 5vw, 3.5rem) 5rem;
+}
+
+.field-note {
+  margin-block-end: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.guide,
+.summary {
+  margin-block-end: 1.25rem;
+  padding: clamp(1.1rem, 3vw, 1.75rem);
+  border: 1px solid #dce6e5;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.guide h2 {
+  margin-block-end: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.guide p {
+  margin-block-end: 0.6rem;
+}
+
+.guide p:last-child {
+  margin-block-end: 0;
+}
+
+/* 使い方の下に畳んである補足。開かなくても始められるものだけを入れる。
+   最初の画面に説明を並べると、読む前に「面倒そう」で閉じられる。 */
+.more {
+  margin-block-start: 1rem;
+  padding-block-start: 0.75rem;
+  border-block-start: 1px solid #e3ebea;
+}
+
+.more > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--focus);
+  cursor: pointer;
+}
+
+.more > summary:hover {
+  text-decoration: underline;
+}
+
+.more > *:not(summary) {
+  font-size: 0.95rem;
+}
+
+.more h3 {
+  margin-block: 1.1rem 0.4rem;
+  font-size: 1rem;
+}
+
+.more ul {
+  margin-block: 0.4rem 0;
+  padding-inline-start: 1.2rem;
+}
+
+.more li {
+  margin-block-end: 0.35rem;
+}
+
+/* 節そのものを畳む形。ひとまとまり全部が、必要になるまで要らないとき。 */
+.guide--fold > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--focus);
+  cursor: pointer;
+}
+
+.guide--fold > summary:hover {
+  text-decoration: underline;
+}
+
+.guide--fold > *:not(summary) {
+  font-size: 0.95rem;
+}
+
+.guide--fold[open] > summary {
+  margin-block-end: 0.5rem;
+}
+
+.guide ul {
+  margin-block: 0.4rem 0;
+  padding-inline-start: 1.2rem;
+}
+
+.guide li {
+  margin-block-end: 0.35rem;
+}
+
+.summary__count {
+  margin-block-end: 0.25rem;
+  font-size: 1.05rem;
+}
+
+.summary__count strong {
+  font-size: 1.6rem;
+}
+
+.reset-controls {
+  margin-block-end: 1.25rem;
+}
+
+.reset-confirmation {
+  margin-block-start: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #bdccd2;
+  border-radius: 0.75rem;
+  background: #f5f9f8;
+}
+
+.reset-confirmation p {
+  margin-block-end: 0.75rem;
+  font-weight: 700;
+}
+
+.reset-confirmation button + button {
+  margin-inline-start: 0.5rem;
+}
+
+.quiet-button {
+  border-color: #c3ccd4;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.storage-warning {
+  margin-block-end: 1.25rem;
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--warn-line);
+  border-radius: 0.75rem;
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  font-weight: 700;
+}
+
+.filter-bar {
+  margin-block-end: 2rem;
+  padding-block: 1rem;
+  border-block: 1px solid #dce2e7;
+}
+
+.filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.filter-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-button__count {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.filter-button[aria-pressed="true"] {
+  color: #fff;
+  background: var(--ink);
+}
+
+.filter-button[aria-pressed="true"] .filter-button__count {
+  color: #cfd8e0;
+}
+
+.list-section h2 {
+  margin-block-end: 1rem;
+  font-size: 1.3rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.1rem;
+}
+
+.loading-note {
+  grid-column: 1 / -1;
+  color: var(--muted);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.1rem;
+  border: 1px solid #d8e0e5;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.card--tried {
+  background: #f7fbf9;
+}
+
+.card__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-block-end: 0;
+}
+
+.card__title {
+  margin-block: 0.15rem;
+  font-size: 1.12rem;
+}
+
+.card__intro {
+  margin-block-end: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.card__status {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-block: auto 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.card--tried .card__status {
+  color: var(--done);
+  font-weight: 700;
+}
+
+.card__open {
+  width: 100%;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: #eef2f4;
+  color: #41505f;
+}
+
+.chip--asis {
+  background: var(--asis-bg);
+  color: var(--asis-ink);
+}
+
+.chip--paste {
+  background: var(--paste-bg);
+  color: var(--paste-ink);
+}
+
+.chip--attach {
+  background: var(--attach-bg);
+  color: var(--attach-ink);
+}
+
+.chip--tried {
+  background: #e6f4ee;
+  color: #14543f;
+}
+
+/* ---- 詳細 ---- */
+
+.detail__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-block-end: 0.85rem;
+}
+
+.detail__intro p {
+  margin-block-end: 0.4rem;
+}
+
+.detail__intro {
+  margin-block-end: 1.5rem;
+}
+
+/* 送る→読む→送るの3段階を、縦線でひとつながりに見せる。
+   番号が付くのは自分が送る2回だけで、読む段階はピンクの丸で示す。
+   各段階の背景色が線の上に重なるので、線は段階のすき間だけに見える。 */
+.stage-flow {
+  position: relative;
+  counter-reset: stage;
+}
+
+.stage-flow::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset-inline-start: 1.05rem;
+  inset-block-start: 0.9rem;
+  inset-block-end: 0.9rem;
+  width: 2px;
+  background: #c3ccd4;
+}
+
+.stage-flow > .block,
+.stage-flow > .reply {
+  position: relative;
+  z-index: 1;
+}
+
+/* 番号は、自分が送る2回にだけ振る。AIの回答は自分の操作ではないので番号を持たない。 */
+.stage-flow > .block::before {
+  counter-increment: stage;
+  content: counter(stage);
+  position: absolute;
+  z-index: 2;
+  inset-inline-start: 0.1rem;
+  inset-block-start: 0.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* 番号の代わりに、線の上にピンクの丸だけを置いて流れを切らない。 */
+.stage-flow > .reply::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset-inline-start: 0.48rem;
+  inset-block-start: 0.7rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid var(--reply-line);
+  border-radius: 50%;
+  background: var(--reply-bg);
+}
+
+.block {
+  margin-block-end: 1rem;
+  padding-inline-start: 2.6rem;
+  border-inline-start: 4px solid #c3ccd4;
+}
+
+.block__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-block-end: 0.6rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.block--asis {
+  border-inline-start-color: var(--asis-line);
+}
+
+.block--asis .block__label {
+  background: var(--asis-bg);
+  color: var(--asis-ink);
+}
+
+.block--paste {
+  border-inline-start-color: var(--paste-line);
+}
+
+.block--paste .block__label {
+  background: var(--paste-bg);
+  color: var(--paste-ink);
+}
+
+.block--attach {
+  border-inline-start-color: var(--attach-line);
+}
+
+.block--attach .block__label {
+  background: var(--attach-bg);
+  color: var(--attach-ink);
+}
+
+.block--fill {
+  border-inline-start-color: var(--fill-line);
+}
+
+.block--fill .block__label {
+  background: var(--fill-bg);
+  color: var(--fill-ink);
+}
+
+/* 回答に添える判断の一文。記入欄ではなく文で伝える。 */
+.reply__decide {
+  display: block;
+  margin-block-start: 0.35rem;
+  font-weight: 700;
+}
+
+/* 最後に手元へ書き留めることを伝える一文。画面に記入欄は置かない。 */
+.closing-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-block: 1.1rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.6rem;
+  background: #eef2f4;
+  font-size: 0.95rem;
+}
+
+.steps {
+  margin-block-end: 0.75rem;
+  padding-inline-start: 1.4rem;
+}
+
+.steps__item {
+  margin-block-end: 0.3rem;
+}
+
+/* 手順の中に置くが、指で押せる大きさを確保するため独立した行にする。 */
+.help {
+  display: block;
+}
+
+.help__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 44px;
+  padding: 0.2rem 0.6rem;
+  border: 0;
+  border-radius: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--focus);
+  background: none;
+  text-decoration: underline;
+}
+
+.help__panel {
+  display: block;
+  margin-block: 0.35rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.6rem;
+  background: #eef2f7;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #2c3a4a;
+}
+
+/* hidden を付けても display: block が勝ってしまい、補足が開きっぱなしになる。
+   押しても乗せても閉じたところから始まるよう、hidden のときは隠す。 */
+.help__panel[hidden] {
+  display: none;
+}
+
+.prompt {
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--ink);
+  border-radius: 0.6rem;
+  background: var(--surface);
+  font-family: "BIZ UDGothic", "Yu Gothic", sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  margin-block-end: 0;
+}
+
+.block--asis .prompt {
+  border-color: var(--asis-line);
+}
+
+.block--paste .prompt {
+  border-color: var(--paste-line);
+}
+
+.block--attach .prompt {
+  border-color: var(--attach-line);
+}
+
+.prompt--fill {
+  border-color: var(--fill-line);
+  background: var(--fill-bg);
+  color: var(--fill-ink);
+}
+
+/* 全30回に共通で付く制約。本文と混ざらないよう行を分ける。 */
+.prompt__limits {
+  display: block;
+  margin-block-start: 0.5rem;
+  font-size: 0.92rem;
+}
+
+.blank-input {
+  min-width: 8rem;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0.3rem 0.6rem;
+  border: 2px solid var(--fill-line);
+  border-radius: 0.5rem;
+  font: inherit;
+  color: var(--ink);
+  background: #fffdf5;
+}
+
+.hints {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-block-end: 0.6rem;
+}
+
+.hints__label {
+  font-size: var(--label-size);
+  color: var(--muted);
+}
+
+.hint {
+  padding: 0.2rem 0.85rem;
+  border-color: var(--fill-line);
+  color: var(--fill-ink);
+  font-size: 0.88rem;
+  font-weight: 400;
+  background: #fffdf5;
+}
+
+.copy-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  margin-block-start: 0.6rem;
+  color: #fff;
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+.copy-button:hover {
+  background: #34455e;
+}
+
+.block--asis .copy-button {
+  border-color: var(--asis-line);
+  background: var(--asis-line);
+}
+
+.block--paste .copy-button {
+  border-color: var(--paste-line);
+  background: var(--paste-line);
+}
+
+.block--attach .copy-button {
+  border-color: var(--attach-line);
+  background: var(--attach-line);
+}
+
+.block--fill .copy-button {
+  border-color: #7d5612;
+  background: #7d5612;
+}
+
+/* 自分の操作（白い枠）と並べたとき、ここだけがAIの側だと分かるようにする。 */
+.reply {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-block: 1.1rem;
+  padding: 0.7rem 0.9rem 0.7rem 2.6rem;
+  border-inline-start: 4px solid var(--reply-line);
+  border-radius: 0.6rem;
+  background: var(--reply-bg);
+  font-size: 0.95rem;
+}
+
+.safety {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-block: 1.25rem 0;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--warn-line);
+  border-radius: 0.6rem;
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  font-size: 0.9rem;
+}
+
+.detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-block-start: 1.25rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid #dce2e7;
+}
+
+.tried-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-color: var(--done);
+  color: var(--done);
+}
+
+.tried-button--on {
+  color: #fff;
+  background: var(--done);
+}
+
+.tried-button--on:hover {
+  background: #196349;
+}
+
+dialog {
+  width: min(680px, calc(100% - 2rem));
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  padding: clamp(1.1rem, 3vw, 1.75rem);
+  overflow: auto;
+  border: 0;
+  border-radius: var(--radius);
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: 0 24px 60px rgb(20 31 45 / 35%);
+}
+
+dialog::backdrop {
+  background: rgb(20 31 45 / 68%);
+}
+
+.dialog-header {
+  position: sticky;
+  z-index: 2;
+  inset-block-start: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-block-end: 0.75rem;
+  padding-block: 0.25rem 0.6rem;
+  background: var(--surface);
+}
+
+.dialog-header h2 {
+  margin-block-end: 0;
+  font-size: 1.25rem;
+}
+
+.dialog-header button {
+  flex: none;
+  padding-inline: 0.9rem;
+}
+
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#toast {
+  position: fixed;
+  z-index: 20;
+  inset-inline: 1rem;
+  inset-block-end: 1rem;
+  width: fit-content;
+  max-width: min(32rem, calc(100% - 2rem));
+  margin-inline: auto;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  color: #fff;
+  background: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+#dialog-toast {
+  position: sticky;
+  z-index: 2;
+  inset-block-end: 0;
+  width: fit-content;
+  max-width: 100%;
+  margin: 1rem auto 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  color: #fff;
+  background: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+#toast:empty,
+#dialog-toast:empty {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .hero,
+  .site-main {
+    width: 100%;
+    padding-inline: 1rem;
+  }
+
+  .card-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .detail__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .detail__actions button {
+    width: 100%;
+  }
+
+  dialog {
+    width: calc(100% - 1rem);
+    max-height: calc(100vh - 1rem);
+    max-height: calc(100dvh - 1rem);
+    padding: 1rem;
+  }
+
+  .blank-input {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* シリーズの巻を横並びで置く。いまいる巻はリンクにせず、現在地として示す。
+   狭い画面では折り返す。指で押せるよう、どの項目も44px以上の高さを持つ。 */
+.volumes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.6rem;
+  max-width: 60rem;
+  margin-inline: auto;
+  padding: 0.35rem 1rem;
+  border-block-end: 1px solid #dce6e5;
+  font-size: 0.9rem;
+}
+
+.volumes__label {
+  color: #5b6b7a;
+  font-size: 0.82rem;
+}
+
+.volumes__note {
+  color: #5b6b7a;
+  font-size: 0.82rem;
+}
+
+.volumes__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.volumes__list a,
+.volumes__current {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.5rem;
+  border-radius: 0.4rem;
+}
+
+.volumes__current {
+  background: #eef2f7;
+  color: #24313f;
+  font-weight: 700;
+}
