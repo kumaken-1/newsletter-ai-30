@@ -20,7 +20,7 @@ const CONTENT_TYPES = {
 };
 const STORAGE_KEY = "newsletter-ai-30-tried-v1";
 // 資料を添付する回。1回目のラベルと補足の確認に使う。
-const ATTACH_ID = 17;
+const ATTACH_ID = 15;
 // 空欄をうめて送る回。送る前の考えが1回目の文に入ることの確認に使う。
 const FILL_ID = 1;
 
@@ -117,7 +117,7 @@ test("一覧の絞り込みと、やってみたの記録が動く", async () =>
     assert.equal(await page.locator(".card").count(), 30);
     assert.match(await page.locator("#summary").innerText(), /0\s*\/\s*30/);
 
-    await page.locator('[data-filter="start"]').click();
+    await page.locator('[data-filter="material"]').click();
     assert.equal(await page.locator(".card").count(), 6);
     await page.locator('[data-filter="all"]').click();
     assert.equal(await page.locator(".card").count(), 30);
